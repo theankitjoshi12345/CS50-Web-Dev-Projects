@@ -1,0 +1,23 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    {{title}}
+{% endblock %}
+
+{% block body %}
+    {% if message %}
+        <h1> {{message}} </h1>
+    {% else %}
+    <div style="text-align: left; margin:0px; padding:0px; background-color: aqua;">
+        <a class="editAnchorTag" href="{% url 'editPage' title %}">
+            ✏️Edit
+        </a>
+        <a class="deleteAnchorTag" href="{% url 'delete' title %}">
+            🗑️Delete
+        </a>
+    </div>
+    <div style="padding:10px">
+        {{ content|safe }}
+    </div>
+    {% endif %}
+{% endblock %}

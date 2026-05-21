@@ -1,0 +1,25 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    {{pageTitle}}
+{% endblock %}
+
+{% block body %}
+    <h1>{{message}}</h1>
+
+    <ul>
+        {% for entry in entries %}
+            <li>
+                <a class="titles" href="{% url 'title' entry %}">
+                    {{ entry }}
+                </a> 
+                <a class="editAnchorTag" href="{% url 'editPage' entry %}">
+                    ✏️Edit
+                </a>
+                <a class="deleteAnchorTag" href="{% url 'delete' entry %}">
+                    🗑️Delete
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,0 +1,126 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+}
+.nav{
+    margin-top: 5px;
+    display:block;
+    text-align: right;
+}
+.link{
+    margin-top: 2px;
+    font-size:small;
+    display: inline-block;
+    border: 1px solid;
+    border-radius: 7px;
+    padding: 2px;
+    color: black;
+    text-decoration: none;
+    margin-right:5px;
+    margin-left:auto;
+}
+.link:hover{
+    background-color: blue;
+    color: white;
+}
+@keyframes flow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+.title{
+    display:inline-block;
+    animation: flow 2s linear infinite;
+    background: linear-gradient(to right, green, blue, yellow, orange, red);
+    background-clip: text;
+    background-size: 200% auto;
+    color: transparent;
+    font-size: 10vw;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.advancedForm{
+    text-align: left;
+    margin-left:2vw;
+    margin-right:2vw;
+}
+.advWhole{
+    display:block;
+    margin-bottom: 20px;
+}
+@media (max-width=500px) {
+    .advText{
+        display:inline-block;
+        height:40px;
+        width: 10vw;
+    }
+    .advBox{
+        display:inline-block;
+        height: 40px;
+        width:10vw;
+    }
+    #advSearchButton{
+        width:200px;
+    }
+}
+@media (width>500px) {
+    .advText{
+        display:inline-block;
+        width: 20vw;
+    }
+    .advBox{
+        display:inline-block;
+        height: 40px;
+        width:60vw;
+    }
+    #advSearchButton{
+        margin-left: 60vw;
+        width:20vw;
+    }
+}
+
+#advSearchButton{
+    background-color: blue;
+    color: white;
+    height: 30px;
+    text-align: center;
+    font-size: small;
+    border-color: blue;
+}
+
+#advSearchButton:hover{
+    background-color: aqua;
+    color:black;
+    cursor: pointer;
+}
+
+
+input {
+    width:100%;
+    height: 40px;
+    border-radius: 10px;
+}
+.searchBox {
+    width: 70%; 
+    height: 40px;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+.searchButton{
+    width:auto;
+    height:auto;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 16px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.searchButton:hover{
+    cursor:pointer;
+    border-radius: 10px;
+    font-size: 16px;
+    background-color: blue;
+    color:white;
+}

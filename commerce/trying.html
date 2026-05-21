@@ -1,0 +1,29 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        let count = 0;
+        let divide;
+        function updateCounter(){
+            count++;
+            divide.innerHTML = count
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            divide = document.querySelector('#counter');
+            divide.innerHTML = count
+
+            setInterval(updateCounter, 1000);
+            
+
+        })
+    </script>
+</head>
+<body>
+    <div style="color:blue; font-size: 100px;" id="counter">
+        Hello
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,18 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    New Page
+{% endblock %}
+
+{% block body %}
+    <h3>{{message}}</h3>
+    <form action="{% url 'newPage' %}" method="post">
+        {% csrf_token %}
+        <input autofocus type="text" value="{{title}}" name="title" placeholder="Title of the Page">
+        <input type="hidden" value={{forEdit}} name="forEdit">
+        <div style="margin-top: 10px;">
+            <textarea name="content" rows="5" cols="60" placeholder="Write your Markdown content here...">{{ content }}</textarea>
+        </div>
+        <input type="submit" value="Save">
+    </form>
+{% endblock %}
