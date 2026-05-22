@@ -1,14 +1,17 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Listing, Bids, Comments
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    if request.user.is_authenticated:
+        return render(request, "auctions/index.html")
+    else:
+        return redirect("login")
 
 
 def login_view(request):
@@ -22,7 +25,9 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return render(request, "auctions/index.html", {
+                "listings": Listing.objects.all(),
+            })
         else:
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."
