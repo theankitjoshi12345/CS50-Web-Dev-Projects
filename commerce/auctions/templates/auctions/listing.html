@@ -1,0 +1,27 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <form action="{% url 'createListing' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <input required type="text" name="name" placeholder="Listing Title" class="form-group">
+
+        <input type="number" class="form-group" name="price" step="0.01" min="0.00" placeholder="0.00" required>
+
+        <select name="category" id="category" required class="form-group">
+            <option value="" disabled selected>Select a category</option>
+            {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+
+        <textarea required name="description" placeholder="Description" class="form-group"></textarea>
+        
+        <input type="file" name="image" accept="image/*" placeholder="Upload Image" class="form-group">
+        
+        <button type="submit" class="submit-button">Create Listing</button>
+        
+    </form>
+
+{% endblock %}

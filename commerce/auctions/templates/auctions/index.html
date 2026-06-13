@@ -1,7 +1,31 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>Active Listings:</h2>
+    {% if listings %}
+        {% for listing in listings %}
+        <div class="listing-container">
 
-    TODO
+            <div class="listing-block listing-image">
+                {% if listing.image %}
+                    <img src="{{ listing.image.url }}" alt="{{ listing.name }}" style="max-width: 300px; max-height:200px;">
+                {% else %}
+                    <p>No image provided.</p>
+                {% endif %}
+            </div>
+
+            <div class="listing-block listing-details">
+                <div id="listing-title"><b>{{ listing.name }}</b></div>
+                <div id="listing-price"><b>Price: </b>{{ listing.price }}</div>
+                <div id="listing-description"><b>Description: </b>{{ listing.description }}</div>
+                <div id="listing-datetime">Listed on: {{listing.datetime}}</div>
+                <a href="{% url 'listing' listing.id %}">
+                    <button class="submit-button" id="listing-button">View Details</button>
+                </a>
+           </div>
+        
+        </div>
+        {% endfor %}
+
+    {% endif %}
 {% endblock %}

@@ -1,3 +1,49 @@
 body {
     padding: 10px;
 }
+
+.form-group{
+    margin-left: 10px;
+    margin-top: 10px;
+    width: 300px;
+    display:block;
+}
+
+.submit-button{
+    margin-left: 10px;
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+}
+
+.submit-button:hover{
+    background-color: black;
+    color:white;
+}
+
+.listing-container{
+    display:flex;
+    flex-wrap: wrap;
+    height:auto;
+    width:auto;
+    flex-wrap: wrap;
+    background-color: bisque;
+    margin-bottom: 10px;
+    padding:5px;
+}
+
+.listing-details{
+    margin-left: 10px;
+}
+
+#listing-title{
+    font-size: larger;
+    color: blue;
+}
+
+#listing-button{
+    margin-left:0px;
+    font-size: x-small;
+}
+
+

@@ -4,12 +4,27 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from .models import User, Listing, Bids, Comments
+from .models import User, Listing, Bid, Comment
+
+categories_list = [
+    "Electronics",
+    "Fashion & Apparel",
+    "Home & Garden",
+    "Books & Education",
+    "Toys & Hobbies",
+    "Sports & Outdoors",
+    "Collectibles & Art",
+    "Automotive",
+    "Health & Beauty",
+    "Other"
+]
 
 
 def index(request):
     if request.user.is_authenticated:
-        return render(request, "auctions/index.html")
+        return render(request, "auctions/index.html", {
+            "listings": Listing.objects.all(),
+        })
     else:
         return redirect("login")
 
@@ -25,9 +40,7 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return render(request, "auctions/index.html", {
-                "listings": Listing.objects.all(),
-            })
+            return redirect("index")
         else:
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."
@@ -66,3 +79,33 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+def createListing(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            name = request.POST["name"]
+            description = request.POST["description"]
+            image = request.FILES.get("image")
+            category = request.POST["category"]
+            price = request.POST["price"]
+            
+            newListing = Listing(
+                name=name,
+                description=description,
+                image=image,
+                owner=request.user,
+                category=category,
+                price=price,
+            )
+
+            newListing.save()
+            return redirect("index")
+
+        else:
+            return render(request, "auctions/listing.html", {
+                "categories": categories_list,
+            })
+
+    return redirect("login")
+
+    
