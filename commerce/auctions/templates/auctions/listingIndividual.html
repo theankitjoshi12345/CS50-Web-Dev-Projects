@@ -1,0 +1,94 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <h2>{{ listing.name }}</h2>
+
+    {% if listing.image %}
+        <img src="{{ listing.image.url }}" alt="{{ listing.name }}" style="max-width: 600px; max-height:400px;">
+    {% else %}
+        <p>No image provided.</p>
+    {% endif %}
+
+    <div style="font-size: large; margin-bottom: 10px;"><b>Details:</b><br>
+        <ul>
+            <li><b>Description:</b> {{listing.description}}</li>
+            <li><b>Price:</b> ${{listing.price}}</li>
+            <li><b>Category: </b>{{listing.category}}</li>
+            <li>Created at <b>{{listing.datetime}}</b></li>
+            <li>Listed by <b>{{listing.owner}}</b></li>
+        </ul>
+                    {% if isWatchlisted %}
+                <a href="{% url 'removeWatchlist' listing.id %}">
+                    <button class="submit-button" style="margin-top:3px; margin-left:0px;">Remove from watchlist</button>
+                </a>
+            {% else %}
+                <a href="{% url 'addWatchlist' listing.id %}">
+                    <button class="submit-button" style="margin-top:3px; margin-left:0px;">Add to watchlist</button>
+                </a>
+            {% endif %}
+    </div>
+
+    <div>
+        {% if listing.active %}
+            <div>
+                {% if request.user != listing.owner %}
+                    <p>{{ listing.bids.count }} bids so far. Wanna put new bid?</p>
+                    <form action="{% url 'placeBid' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="number" name="newBid" step="0.01" min="{{listing.price}}" placeholder="0.00" required>
+                        <input type="submit" value="Place Bid">
+                    </form>
+                {% else %}
+                    <p>{{ listing.bids.count }} bids so far. Wanna close this auction?
+                        <a href="{% url 'closeListing' listing.id %}">
+                            <button class="submit-button">Close</button>
+                        </a>
+                    </p>
+                {% endif %}
+            </div>
+            
+        {% else %}
+            {% if listing.winner %}
+                <div>
+                    <h2> Winner: {{ listing.winner }} </h2>
+                </div>
+            {% else %}
+                <div>
+                    <h2> Listing is closed without any winner</h2>
+                </div>ß
+            {% endif %}
+        {% endif %}
+
+        <div>
+            <h3>Comments:</h3>
+            <ul>
+                {% for comment in comments %}
+                    <li><b>{{comment.commenter}}</b>: {{comment.content}}</li>
+                {% empty %}
+                    <li>No comments.</li>
+                {% endfor %}
+
+                {% if listing.active %}
+                    <li>
+                        <form action="{% url 'addComment' listing.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="text" required name="content" placeholder="Add a comment"></textarea>
+                            <input type="submit" class="submit-button" value="POST">
+                        </form>        
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+
+
+    </div>
+
+{% endblock %}

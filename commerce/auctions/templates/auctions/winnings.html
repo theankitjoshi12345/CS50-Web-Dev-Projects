@@ -10,7 +10,7 @@
         </div>
     {% endif %}
 
-    <h2>Active Listings:</h2>
+    <h2>Your winnings:</h2>
     {% if listings %}
         {% for listing in listings %}
         <div class="listing-container">
@@ -34,13 +34,6 @@
            </div>
         
         </div>
-
-        {% empty %}
-            <div>
-                <ul>
-                    <li> There're no items in auciton at this moment. </li>
-                </ul>
-            </div>
         {% endfor %}
  
     {% endif %}

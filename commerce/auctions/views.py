@@ -3,8 +3,10 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
-from .models import User, Listing, Bid, Comment
+from .models import User, Listing, Bid, Comment, Watchlist
 
 categories_list = [
     "Electronics",
@@ -23,7 +25,7 @@ categories_list = [
 def index(request):
     if request.user.is_authenticated:
         return render(request, "auctions/index.html", {
-            "listings": Listing.objects.all(),
+            "listings": Listing.objects.filter(active=True),
         })
     else:
         return redirect("login")
@@ -90,7 +92,7 @@ def createListing(request):
             price = request.POST["price"]
             
             newListing = Listing(
-                name=name,
+                name=name.capitalize(),
                 description=description,
                 image=image,
                 owner=request.user,
@@ -99,7 +101,8 @@ def createListing(request):
             )
 
             newListing.save()
-            return redirect("index")
+            messages.success(request, f"Listing for \"{newListing.name}\" has been uploaded successfully.")
+            return redirect("listing", id = newListing.id)
 
         else:
             return render(request, "auctions/listing.html", {
@@ -108,4 +111,103 @@ def createListing(request):
 
     return redirect("login")
 
-    
+@login_required    
+def listing(request, id):
+    listing = Listing.objects.get(pk=id)
+    isWatchlisted = Watchlist.objects.filter(user=request.user, listing=listing).exists()
+    return render(request, "auctions/listingIndividual.html", {
+        "listing": listing,
+        "isWatchlisted":isWatchlisted,
+        "comments": Comment.objects.filter(listing = listing)
+    })
+
+@login_required
+def category(request):
+    return render(request, "auctions/category.html",{
+        "categories": categories_list,
+    })
+
+@login_required
+def categorySpecific(request, category):
+    return render(request, "auctions/categorySpecific.html",{
+        "category":category,
+        "listings": Listing.objects.filter(category=category),
+        })
+
+@login_required
+def placeBid(request, id):
+    if request.method=="POST":
+        listing=Listing.objects.get(pk=id)
+        newBid = Bid(
+            bidder = request.user,
+            listing = listing,
+            amount = request.POST["newBid"]
+        )
+        newBid.save()
+        # print("newBid saved successfully.")
+        listing.price = request.POST["newBid"]
+        listing.save()
+        messages.success(request, "Your bid has placed successfully. Best of luck!")
+        return redirect("listing", id=id)
+    else:
+        return redirect("index")
+
+@login_required
+def closeListing(request, id):
+    listing = Listing.objects.get(pk=id)
+    if (request.user == listing.owner):
+        listing.active = False
+        highestBid = listing.bids.order_by('-amount').first()
+        if highestBid is not None:
+            listing.winner = highestBid.bidder
+        else:
+            listing.winner = None
+        print(listing.winner)
+        listing.save()
+        messages.success(request, f"Your listing for \"{listing.name}\" is closed successfully.")
+        return redirect("listing", id=id)
+    else:
+        redirect("index")
+
+@login_required
+def addWatchlist(request, id):
+    listing = Listing.objects.get(pk=id)
+    user = request.user
+    watch = Watchlist(user = user, listing = listing)
+    watch.save()
+    messages.success(request, f"\"{listing.name}\" has been added to your watchlist successfully.")
+    return redirect("listing", id)
+
+@login_required
+def watchlist(request):
+    listings = Listing.objects.filter(watchlistedBy__user = request.user)
+    return render(request, "auctions/watchlist.html", {
+        "listings": listings
+    })
+
+@login_required
+def removeWatchlist(request, id):
+    listing = Listing.objects.get(pk=id)
+    listing.watchlistedBy.filter(user=request.user).delete()
+    messages.success(request, f"\"{listing.name}\" has been removed from your watchlist successfully.")
+    return redirect("listing", id)
+
+@login_required
+def winnings(request):
+    listings = Listing.objects.filter(winner=request.user)
+    return render(request, "auctions/winnings.html", {
+        "listings": listings
+    })
+
+@login_required
+def addComment(request, id):
+    if request.method == "POST": 
+        listing = Listing.objects.get(pk=id)
+        newComment = Comment(
+            commenter = request.user,
+            listing = listing,
+            content = request.POST["content"]
+        )
+        newComment.save()
+        messages.success(request, "Your comment has been posted.")
+    return redirect("listing", id = id)

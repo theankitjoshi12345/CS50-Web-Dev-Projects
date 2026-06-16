@@ -16,9 +16,11 @@ class Listing(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField()
     image = models.ImageField(upload_to="listings/", blank=True, null=True)
-    category = models.CharField(max_length=30, default="OTHER")
+    category = models.CharField(max_length=30, default="Other")
     price = models.DecimalField(max_digits=10, decimal_places=2)
     datetime = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True)
+    winner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name="wins")
 
     def __str__(self):
         return f"\"{self.owner}\" listed {self.name.capitalize()}. Description: {self.description}"
@@ -35,7 +37,15 @@ class Bid(models.Model):  # Renamed to singular
 
 class Comment(models.Model):  # Renamed to singular
     commenter = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="comments")
+        User, on_delete=models.CASCADE, related_name="writtenComments")
     listing = models.ForeignKey(
         Listing, on_delete=models.CASCADE, related_name="comments")  # Fixed related_name
     content = models.TextField()
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlists")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="watchlistedBy")
+    datetime = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'listing')
