@@ -1,0 +1,60 @@
+.newpost-container{
+    height:auto;
+    width: auto;
+    border: 1px solid black;
+    margin: 10px;
+    padding: 20px;
+    margin-right: 10px;
+}
+.newpost-element{
+    display: block;
+}
+.newpost-textarea{
+    margin-bottom: 5px;
+    width: 100%;
+}
+.posts-container{
+    height:auto;
+    width: auto;
+    border: 1px solid blue;
+    margin: 10px;
+    padding: 20px;
+    margin-right: 10px;
+}
+.individual-post{
+    border: 1px solid gray;
+    margin-bottom: 5px;
+    padding: 5px;
+}
+#post-delete-button{
+    font-size: xx-small;
+    padding: 2px;
+}
+@keyframes fadeOutAndCollapse {
+    100% {
+        opacity: 0;
+        transform: scale(0.9);
+        max-height: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        border-top: 0;
+        border-bottom: 0;
+    }
+}
+
+.hide-deleted-post {
+    /* Notice we removed the 0% block entirely! */
+    animation: fadeOutAndCollapse 3s ease forwards;
+    overflow: hidden;
+}
+.likebutton:hover{
+    cursor: pointer;
+}
+.likebutton:active{
+    font-size: 200%;
+}
+.likebutton{
+    border:none;
+    background-color: transparent;
+}

@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  db: 
+    image: postgres:15
+    environment:
+      - POSTGRES_PASSWORD=andyandy
+      - POSTGRES_USER=andy
+      - POSTGRES_DB=postgres
+
+  web: 
+    build: .
+    volumes: 
+      - .:/usr/src/app
+    ports: 
+      - "8000:8000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=postgres
+      - DB_USER=andy
+      - DB_PASSWORD=andyandy
+    depends_on:
+      - db
+    restart: on-failure
